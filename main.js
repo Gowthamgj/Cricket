@@ -169,7 +169,8 @@ function check(ele) {
 var battingOrder = set1[Symbol.iterator]();
 var batsman1 = new batsman_1.Batsman(battingOrder.next()['value']);
 var batsman2 = new batsman_1.Batsman(battingOrder.next()['value']);
-var currentBowler = new bowler_1.Bowler(given[0].bowlerName);
+var currentBowler;
+currentBowler = new bowler_1.Bowler(given[0].bowlerName);
 currentBowler.addOvers();
 scorer.addBatsman(batsman1);
 scorer.addBatsman(batsman2);
@@ -179,15 +180,22 @@ given.forEach(function (ball) {
             scorer.bowlingOrder.push(currentBowler);
         }
         currentBowler = new bowler_1.Bowler(ball.bowlerName);
-        if (scorer.bowlingOrder.find(check) != undefined) {
+        if (scorer.bowlingOrder.find(check) !== undefined) {
             currentBowler = scorer.bowlingOrder.find(check);
         }
         currentBowler.addOvers();
     }
     if (ball.isOut === false) {
         if (ball.isExtra) {
-            scorer.totalScore += ball.extraInfo.runsOffered;
-            currentBowler.addbowlerRuns(ball.extraInfo.runsOffered);
+            if (ball.extraType == 'wide' || ball.extraType == 'Noball') {
+                scorer.totalScore += ball.extraInfo.runsOffered;
+                currentBowler.addbowlerRuns(ball.extraInfo.runsOffered);
+            }
+            else {
+                scorer.totalScore += ball.extraInfo.runsOffered;
+                currentBowler.addbowlerRuns(ball.extraInfo.runsOffered);
+                scorer.addBallCount();
+            }
             // ballCount--;
         }
         else {

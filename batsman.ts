@@ -4,7 +4,7 @@ export class Batsman extends Player {
     private numberOfRunsScored: number;
     private numberOfBallsFaced: number;
     private isOut:boolean;
-    private dismissalType:string;
+    private dismissalType:string|null;
     private dismissalInfo:DismissalInfo;
 
     constructor(name: string) {

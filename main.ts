@@ -163,14 +163,14 @@ var given:Array<BallDetail>=[
 given.forEach((ball)=>{
  set1.add(ball.batsmanName);
 });
-function check(ele){
+function check(ele:Bowler){
     return ele.playerName==currentBowler.playerName;
 }
 const battingOrder = set1[Symbol.iterator]();
 const batsman1=new Batsman(battingOrder.next()['value']);
 const batsman2=new Batsman(battingOrder.next()['value']);
-
-var currentBowler = new Bowler(given[0].bowlerName);
+var currentBowler:Bowler
+ currentBowler= new Bowler(given[0].bowlerName);
 
 currentBowler.addOvers();
 scorer.addBatsman(batsman1);
@@ -181,15 +181,22 @@ given.forEach((ball)=>{
             scorer.bowlingOrder.push(currentBowler);                    
         }
         currentBowler = new Bowler(ball.bowlerName); 
-        if(scorer.bowlingOrder.find(check)!=undefined){
+        if(scorer.bowlingOrder.find(check)!==undefined){
             currentBowler=scorer.bowlingOrder.find(check);
         }
         currentBowler.addOvers();
     }
     if(ball.isOut===false){
         if(ball.isExtra){
-            scorer.totalScore+=ball.extraInfo.runsOffered;
-            currentBowler.addbowlerRuns(ball.extraInfo.runsOffered);
+            if(ball.extraType=='wide' || ball.extraType=='Noball'){
+                scorer.totalScore+=ball.extraInfo.runsOffered;
+                currentBowler.addbowlerRuns(ball.extraInfo.runsOffered);
+            }
+            else{
+                scorer.totalScore+=ball.extraInfo.runsOffered;
+                currentBowler.addbowlerRuns(ball.extraInfo.runsOffered);
+                scorer.addBallCount();
+             }
             // ballCount--;
         }
         else{

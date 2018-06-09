@@ -1,6 +1,6 @@
 "use strict";
 exports.__esModule = true;
-var playerOnStrike = null;
+var playerOnStrike;
 var chalk = require('chalk');
 var tab = require('table-master');
 console.log(chalk.blue('India') + ' Vs ' + chalk.red('England'));
@@ -8,12 +8,16 @@ var Scorer = /** @class */ (function () {
     function Scorer() {
         this.totalScore = 0;
         this.listOfBatsman = [];
+        this.listOfBowler = [];
         this.battingOrder = [];
         this.bowlingOrder = [];
         this.totalOver = 0;
         this.ballRuns = [];
         this.totalWickets = 0;
     }
+    Scorer.prototype.addBallCount = function () {
+        playerOnStrike.addRuns(0);
+    };
     Scorer.prototype.addBatsman = function (batsman) {
         this.listOfBatsman.push(batsman);
         playerOnStrike = this.listOfBatsman[0];
@@ -117,7 +121,7 @@ var Scorer = /** @class */ (function () {
             // console.log(`${batsman.playerName} scored ${batsman.numberOfRuns} faced ${batsman.numberOfBallsBatted} status ${batsman.outStatus}`);
             var batting = {};
             if (batsman.outStatus == true) {
-                batting["Batsman Name"] = batsman.playerName;
+                batting["BatsmanName"] = batsman.playerName;
                 if (batsman.outType == "Run Out") {
                     batting["status"] = "(Run Out)";
                 }
@@ -131,7 +135,7 @@ var Scorer = /** @class */ (function () {
                 }
             }
             else if (batsman.outStatus == false) {
-                batting["Batsman Name"] = chalk.green(batsman.playerName + "*");
+                batting["BatsmanName"] = chalk.green(batsman.playerName + "*");
                 batting["status"] = "Not Out";
             }
             batting["score"] = batsman.numberOfRuns + "(" + batsman.numberOfBallsBatted + ")";
@@ -141,25 +145,25 @@ var Scorer = /** @class */ (function () {
         this.bowlingOrder.forEach(function (bowl) {
             var bowlObj = {};
             bowlObj["Bowler"] = bowl.playerName;
-            bowlObj["Overs"] = bowl.bowledOver;
+            bowlObj["Overs"] = "" + bowl.bowledOver;
             // console.log(bowl.considerRuns);
             if (bowl.maidenOver === 0) {
                 bowlObj["Maiden"] = "0";
             }
             else {
-                bowlObj["Maiden"] = bowl.maidenOver;
+                bowlObj["Maiden"] = "" + bowl.maidenOver;
             }
             if (bowl.considerRuns === 0) {
                 bowlObj["Runs"] = "0";
             }
             else {
-                bowlObj["Runs"] = bowl.considerRuns;
+                bowlObj["Runs"] = "" + bowl.considerRuns;
             }
             if (bowl.wickets === 0) {
                 bowlObj["Wickets"] = "0";
             }
             else {
-                bowlObj["Wickets"] = bowl.wickets;
+                bowlObj["Wickets"] = "" + bowl.wickets;
             }
             outputBall.push(bowlObj);
         });
