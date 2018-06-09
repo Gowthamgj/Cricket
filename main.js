@@ -75,6 +75,89 @@ var given = [
         batsmanName: 'Yuvraj',
         bowlerName: 'woakes'
     },
+    {
+        runsScored: 3,
+        isOut: false,
+        batsmanName: 'Yuvraj',
+        bowlerName: 'woakes'
+    },
+    {
+        runsScored: 6,
+        isOut: false,
+        batsmanName: 'Kohli',
+        bowlerName: 'woakes'
+    },
+    {
+        runsScored: 6,
+        isOut: false,
+        batsmanName: 'Yuvraj',
+        bowlerName: 'Anderson'
+    },
+    {
+        runsScored: 0,
+        isOut: false,
+        isExtra: true,
+        extraType: 'byes',
+        extraInfo: {
+            runsOffered: 2
+        },
+        batsmanName: 'Yuvraj',
+        bowlerName: 'Anderson'
+    },
+    {
+        runsScored: 3,
+        isOut: false,
+        batsmanName: 'Yuvraj',
+        bowlerName: 'Anderson'
+    },
+    {
+        runsScored: 6,
+        isOut: false,
+        batsmanName: 'Kohli',
+        bowlerName: 'Anderson'
+    },
+    {
+        runsScored: 6,
+        isOut: false,
+        batsmanName: 'Kohli',
+        bowlerName: 'Anderson'
+    },
+    {
+        runsScored: 3,
+        isOut: false,
+        batsmanName: 'Kohli',
+        bowlerName: 'Anderson'
+    }, {
+        runsScored: 0,
+        isOut: false,
+        batsmanName: 'Kohli',
+        bowlerName: 'Mooen'
+    }, {
+        runsScored: 0,
+        isOut: false,
+        batsmanName: 'Kohli',
+        bowlerName: 'Mooen'
+    }, {
+        runsScored: 0,
+        isOut: false,
+        batsmanName: 'Kohli',
+        bowlerName: 'Mooen'
+    }, {
+        runsScored: 0,
+        isOut: false,
+        batsmanName: 'Kohli',
+        bowlerName: 'Mooen'
+    }, {
+        runsScored: 0,
+        isOut: false,
+        batsmanName: 'Kohli',
+        bowlerName: 'Mooen'
+    }, {
+        runsScored: 0,
+        isOut: false,
+        batsmanName: 'Kohli',
+        bowlerName: 'Mooen'
+    },
 ];
 var set1 = new Set();
 given.forEach(function (ball) {
@@ -92,7 +175,9 @@ scorer.addBatsman(batsman1);
 scorer.addBatsman(batsman2);
 given.forEach(function (ball) {
     if (currentBowler.playerName != ball.bowlerName) {
-        scorer.bowlingOrder.push(currentBowler);
+        if (!scorer.bowlingOrder.find(check)) {
+            scorer.bowlingOrder.push(currentBowler);
+        }
         currentBowler = new bowler_1.Bowler(ball.bowlerName);
         if (scorer.bowlingOrder.find(check) != undefined) {
             currentBowler = scorer.bowlingOrder.find(check);
@@ -100,9 +185,17 @@ given.forEach(function (ball) {
         currentBowler.addOvers();
     }
     if (ball.isOut === false) {
-        scorer.calculateScore(ball.runsScored, ballCount, currentBowler);
+        if (ball.isExtra) {
+            scorer.totalScore += ball.extraInfo.runsOffered;
+            currentBowler.addbowlerRuns(ball.extraInfo.runsOffered);
+            // ballCount--;
+        }
+        else {
+            scorer.calculateScore(ball.runsScored, ballCount, currentBowler);
+        }
     }
     else if (ball.isOut === true) {
+        scorer.totalWickets++;
         //console.log("true block"+ball.runsScored);
         scorer.calculateScore(ball.runsScored, ballCount, currentBowler);
         scorer.outStatus(ball.isOut, ball.dismissalType, ball.dismissalInfo.fielderName, ball.bowlerName);
@@ -117,4 +210,5 @@ given.forEach(function (ball) {
     }
     ballCount++;
 });
+scorer.bowlingOrder.push(currentBowler);
 scorer.printScore();

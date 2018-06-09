@@ -37,7 +37,7 @@ export class Batsman extends Player {
     changeStatus(out:boolean,type:string,fname:string,bname:string){
         this.isOut=out;
         this.dismissalType=type;
-        this.numberOfBallsFaced+=1;
+        //this.numberOfBallsFaced+=1;
         // console.log(fname+bname)
         this.dismissalInfo.fixOutInfo(fname,bname);
     

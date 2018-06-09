@@ -1,9 +1,11 @@
 import { Batsman } from './batsman';
 import { Scorer } from './scorer';
 import {Bowler} from './bowler';
+import { BallDetail } from './BallDetail';
 const scorer = new Scorer();
 var ballCount=1;
-var given=[
+
+var given:Array<BallDetail>=[
     {
         runsScored: 0,
         isOut: true,
@@ -73,24 +75,89 @@ var given=[
         batsmanName: 'Yuvraj',
         bowlerName: 'woakes'
     },
-    //  {
-    //     runsScored: 3,
-    //     isOut: false,
-    //     batsmanName: 'Yuvraj',
-    //     bowlerName: 'woakes'
-    // },
-    // {
-    //     runsScored: 6,
-    //     isOut: false,
-    //     batsmanName: 'Kohli',
-    //     bowlerName: 'woakes'
-    // },
-    // {
-    //     runsScored: 6,
-    //     isOut: false,
-    //     batsmanName: 'Yuvraj',
-    //     bowlerName: 'Anderson'
-    // }
+     {
+        runsScored: 3,
+        isOut: false,
+        batsmanName: 'Yuvraj',
+        bowlerName: 'woakes'
+    },
+    {
+        runsScored: 6,
+        isOut: false,
+        batsmanName: 'Kohli',
+        bowlerName: 'woakes'
+    },
+    {
+        runsScored: 6,
+        isOut: false,
+        batsmanName: 'Yuvraj',
+        bowlerName: 'Anderson'
+    },
+    {
+        runsScored: 0,
+        isOut: false,
+        isExtra: true,
+        extraType: 'byes',
+        extraInfo: {
+            runsOffered: 2
+        },
+        batsmanName: 'Yuvraj',
+        bowlerName: 'Anderson'
+    },
+    {
+        runsScored: 3,
+        isOut: false,
+        batsmanName: 'Yuvraj',
+        bowlerName: 'Anderson'
+    },
+    {
+        runsScored: 6,
+        isOut: false,
+        batsmanName: 'Kohli',
+        bowlerName: 'Anderson'
+    },
+    {
+        runsScored: 6,
+        isOut: false,
+        batsmanName: 'Kohli',
+        bowlerName: 'Anderson'
+    },
+    {
+        runsScored: 3,
+        isOut: false,
+        batsmanName: 'Kohli',
+        bowlerName: 'Anderson'
+    },{
+        runsScored: 0,
+        isOut: false,
+        batsmanName: 'Kohli',
+        bowlerName: 'Mooen'
+    },{
+        runsScored: 0,
+        isOut: false,
+        batsmanName: 'Kohli',
+        bowlerName: 'Mooen'
+    },{
+        runsScored: 0,
+        isOut: false,
+        batsmanName: 'Kohli',
+        bowlerName: 'Mooen'
+    },{
+        runsScored: 0,
+        isOut: false,
+        batsmanName: 'Kohli',
+        bowlerName: 'Mooen'
+    },{
+        runsScored: 0,
+        isOut: false,
+        batsmanName: 'Kohli',
+        bowlerName: 'Mooen'
+    },{
+        runsScored: 0,
+        isOut: false,
+        batsmanName: 'Kohli',
+        bowlerName: 'Mooen'
+    },
     ];
     let set1 = new Set();
 given.forEach((ball)=>{
@@ -110,7 +177,9 @@ scorer.addBatsman(batsman1);
 scorer.addBatsman(batsman2);
 given.forEach((ball)=>{
     if(currentBowler.playerName!=ball.bowlerName){
-        scorer.bowlingOrder.push(currentBowler);        
+        if(!scorer.bowlingOrder.find(check)){
+            scorer.bowlingOrder.push(currentBowler);                    
+        }
         currentBowler = new Bowler(ball.bowlerName); 
         if(scorer.bowlingOrder.find(check)!=undefined){
             currentBowler=scorer.bowlingOrder.find(check);
@@ -118,9 +187,17 @@ given.forEach((ball)=>{
         currentBowler.addOvers();
     }
     if(ball.isOut===false){
-        scorer.calculateScore(ball.runsScored,ballCount,currentBowler);    
+        if(ball.isExtra){
+            scorer.totalScore+=ball.extraInfo.runsOffered;
+            currentBowler.addbowlerRuns(ball.extraInfo.runsOffered);
+            // ballCount--;
+        }
+        else{
+             scorer.calculateScore(ball.runsScored,ballCount,currentBowler);        
+        }
     }
     else if(ball.isOut===true){
+        scorer.totalWickets++;
         //console.log("true block"+ball.runsScored);
         scorer.calculateScore(ball.runsScored,ballCount,currentBowler);
         scorer.outStatus(ball.isOut,ball.dismissalType,ball.dismissalInfo.fielderName,ball.bowlerName);           
@@ -135,5 +212,5 @@ given.forEach((ball)=>{
     }
     ballCount++;
 });
-
+scorer.bowlingOrder.push(currentBowler);
 scorer.printScore();

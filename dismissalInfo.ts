@@ -5,6 +5,12 @@ export class DismissalInfo{
         this.fielderName=null;
         this.bowlerName=null;
     }
+    get fname(){
+        return this.fielderName;
+    }
+    get bname(){
+        return this.bowlerName;
+    }
     fixOutInfo(fname:string,bname:string){
         this.fielderName=fname;
         this.bowlerName=bname;
